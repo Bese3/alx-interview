@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+from math import factorial
 '''
 Module 0-pascal_triangle
 Contains function pascal_triangle(n)
@@ -13,19 +14,23 @@ def pascal_triangle(n):
     Returns:
       List of list of numbers, each list representing a
     '''
-    triangle = []
-
+    if n <= 0:
+        return []
+    my_list, temp, r = [], [], 0
     for i in range(n):
-        if i == 0:
-            triangle.append([1])
-            continue
-        if i == 1:
-            triangle.append([1, 1])
-            continue
+        while r <= i:
+            temp.append(int(combination(i, r)))
+            r += 1
+        my_list.append(temp)
+        temp = []
+        r = 0
+    return my_list
 
-        triangle.append([1])
-        for j in range(len(triangle[i - 1]) - 1):
-            triangle[-1].append(triangle[i - 1][j] + triangle[i - 1][j + 1])
-        triangle[-1].append(1)
 
-    return triangle
+def combination(n, r):
+    """
+    computes the combination of two numbers
+    """
+    num = factorial(n)
+    den = factorial(n - r) * factorial(r)
+    return num / den
