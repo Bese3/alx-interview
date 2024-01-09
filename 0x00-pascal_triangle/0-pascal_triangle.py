@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-from math import factorial
 '''
 Module 0-pascal_triangle
 Contains function pascal_triangle(n)
@@ -25,6 +24,12 @@ def pascal_triangle(n):
         temp = []
         r = 0
     return my_list
+
+
+def factorial(n):
+    if n <= 1:
+        return 1
+    return n * factorial(n - 1)
 
 
 def combination(n, r):
