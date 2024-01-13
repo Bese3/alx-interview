@@ -8,25 +8,43 @@ def canUnlockAll(boxes):
         True: all boxes can be opened
         False: not all boxes can be opened
     '''
-    length = len(boxes)
-    keys = set()
-    opened_boxes = []
+    initial_index = 0
+    keys = {0}
+    checkboxes(boxes, initial_index, keys)
+    zero_in = False
+    for i in boxes:
+        if 0 in i:
+            zero_in = True
+
+    if len(keys) > len(boxes) and zero_in:
+        return False
+
     i = 0
-
-    while i < length:
-        oldi = i
-        opened_boxes.append(i)
-        keys.update(boxes[i])
-        for key in keys:
-            if key != 0 and key < length and key not in opened_boxes:
-                i = key
-                break
-        if oldi != i:
-            continue
-        else:
-            break
-
-    for i in range(length):
-        if i not in opened_boxes and i != 0:
+    while i < len(keys):
+        if i <= len(keys) - 2 and list(keys)[i + 1] != list(keys)[i] + 1:
             return False
+        i += 1
     return True
+
+
+def checkboxes(boxes, pos, keys):
+    '''
+    The function "checkboxes" recursively checks if all checkboxes
+    can be selected based on the given positions and keys.
+    '''
+    if len(keys) == len(boxes):
+        return True
+
+    # if calls >= len(boxes):
+    #     return keys
+
+    if pos >= len(boxes):
+        return
+
+    for i in boxes[pos]:
+        if i in keys:
+            continue
+        keys.add(i)
+        # print(f"pos = {pos}, i = {i}, keys = {keys}")
+        checkboxes(boxes, i, keys)
+    return keys
