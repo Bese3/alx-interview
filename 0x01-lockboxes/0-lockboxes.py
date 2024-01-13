@@ -11,13 +11,17 @@ def canUnlockAll(boxes):
     '''
     initial_index = 0
     keys = {0}
-    checkboxes(boxes, initial_index, keys)
+    print(checkboxes(boxes, initial_index, keys))
     zero_in = False
     for i in boxes:
         if 0 in i:
             zero_in = True
+            break
 
     if len(keys) > len(boxes) and zero_in:
+        return False
+
+    if len(keys) < len(boxes):
         return False
 
     i = 0
@@ -25,6 +29,7 @@ def canUnlockAll(boxes):
         if i <= len(keys) - 2 and list(keys)[i + 1] != list(keys)[i] + 1:
             return False
         i += 1
+    # if len(keys) == len(boxes):
     return True
 
 
@@ -34,11 +39,6 @@ def checkboxes(boxes, pos, keys):
     can be selected based on the given positions and keys.
     '''
     setrecursionlimit(10000)
-    if len(keys) == len(boxes):
-        return True
-
-    # if calls >= len(boxes):
-    #     return keys
 
     if pos >= len(boxes):
         return
