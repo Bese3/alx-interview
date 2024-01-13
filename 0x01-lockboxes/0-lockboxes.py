@@ -1,6 +1,6 @@
 #!/usr/bin/python3
-from sys import setrecursionlimit
 '''LockBoxes Challenge'''
+from sys import setrecursionlimit
 
 
 def canUnlockAll(boxes):
