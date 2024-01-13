@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+from sys import setrecursionlimit
 '''LockBoxes Challenge'''
 
 
@@ -32,6 +33,7 @@ def checkboxes(boxes, pos, keys):
     The function "checkboxes" recursively checks if all checkboxes
     can be selected based on the given positions and keys.
     '''
+    setrecursionlimit(10000)
     if len(keys) == len(boxes):
         return True
 
