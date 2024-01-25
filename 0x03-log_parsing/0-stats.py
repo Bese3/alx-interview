@@ -58,6 +58,7 @@ def main():
     i = 0
     try:
         for line in sys.stdin:
+            i += 1
             line = line.rstrip().split(" ")
             try:
                 ip_val = validate_ip(line[0])
@@ -70,16 +71,19 @@ def main():
 
                 if not ip_val or not isinstance(parsed_datetime, datetime):
                     raise ValueError("")
+            except Exception:
+                continue
+            try:
                 if int(line[7]) not in status_code:
                     raise ValueError("")
-                stat_dict[int(line[7])] += 1
-                total_size += int(line[8])
-                i += 1
-                if i % 10 == 0:
-                    signal_handler(total_size, stat_dict)
-                # signal_handler(total_size, stat_dict)
             except Exception:
-                pass
+                continue
+            stat_dict[int(line[7])] += 1
+            total_size += int(line[8])
+
+            if i % 10 == 0:
+                signal_handler(total_size, stat_dict)
+                # signal_handler(total_size, stat_dict)
     except KeyboardInterrupt:
         signal_handler(total_size, stat_dict)
         raise
