@@ -30,24 +30,19 @@ def validate_ip(ip_ad: str) -> bool:
     return True
 
 
-def signal_handler(sig, frame):
+def signal_handler(total_size, stat_dict):
     """
     The function `signal_handler` is a Python function
     that handles signals, printing the file size and
     resetting global variables before exiting.
     """
-    global total_size
     print(f"File size: {total_size}")
-    total_size = 0
-    global stat_dict
+    # total_size = 0
     for k, v in stat_dict.items():
         if v != 0:
             print(f"{k}: {v}")
             stat_dict[k] = 0
-    exit(0)
-
-
-signal.signal(signal.SIGINT, signal_handler)
+    # exit(0)
 
 
 def main():
@@ -58,41 +53,36 @@ def main():
     the total file size and the count of each status code every 10 lines.
     """
     status_code = [200, 301, 400, 401, 403, 404, 405, 500]
-    global stat_dict
-    stat_dict = {200: 0, 301: 0, 400: 0,
-                 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
-    global total_size
+    stat_dict = {k: 0 for k in status_code}
+    total_size = 0
     i = 0
-    for line in sys.stdin:
-        line = line.rstrip().split(" ")
-        try:
-            ip_val = validate_ip(line[0])
-            format_string = "%Y-%m-%d %H:%M:%S.%f"
-            line[2] = line[2] + ' ' + line[3]
-            line[2] = line[2].replace('[', '')
-            line[2] = line[2].replace(']', '')
-            # print(len(line))
-            parsed_datetime = datetime.strptime(line[2], format_string)
+    try:
+        for line in sys.stdin:
+            line = line.rstrip().split(" ")
+            try:
+                ip_val = validate_ip(line[0])
+                format_string = "%Y-%m-%d %H:%M:%S.%f"
+                line[2] = line[2] + ' ' + line[3]
+                line[2] = line[2].replace('[', '')
+                line[2] = line[2].replace(']', '')
+                # print(len(line))
+                parsed_datetime = datetime.strptime(line[2], format_string)
 
-            if not ip_val or not isinstance(parsed_datetime, datetime):
-                raise ValueError("")
-            if int(line[7]) not in status_code:
-                raise ValueError("")
-            stat_dict[int(line[7])] += 1
-            total_size += int(line[8])
-            i += 1
-            if i == 10:
-                i = 0
-                print(f"File size: {total_size}")
-                total_size = 0
-                for k, v in stat_dict.items():
-                    if v != 0:
-                        print(f"{k}: {v}")
-                    stat_dict[k] = 0
-        except KeyboardInterrupt:
-            signal_handler()
-        except (ValueError):
-            continue
+                if not ip_val or not isinstance(parsed_datetime, datetime):
+                    raise ValueError("")
+                if int(line[7]) not in status_code:
+                    raise ValueError("")
+                stat_dict[int(line[7])] += 1
+                total_size += int(line[8])
+                i += 1
+                if i % 10 == 0:
+                    signal_handler(total_size, stat_dict)
+                # signal_handler(total_size, stat_dict)
+            except Exception:
+                pass
+    except KeyboardInterrupt:
+        signal_handler(total_size, stat_dict)
+        raise
 
 
 if __name__ == '__main__':
