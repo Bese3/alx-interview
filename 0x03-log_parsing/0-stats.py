@@ -1,4 +1,7 @@
 #!/usr/bin/python3
+"""
+parsing the output of generator code
+"""
 import sys
 import signal
 from datetime import datetime
