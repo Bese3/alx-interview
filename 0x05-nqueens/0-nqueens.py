@@ -1,45 +1,45 @@
 #!/usr/bin/python3
 """ N queens """
-import sys
 
 
-if len(sys.argv) > 2 or len(sys.argv) < 2:
-    print("Usage: nqueens N")
-    exit(1)
+left_diag = set()
+right_diag = set()
+column = set()
+result = []
 
 
-if not sys.argv[1].isdigit():
-    print("N must be a number")
-    exit(1)
-
-if int(sys.argv[1]) < 4:
-    print("N must be at least 4")
-    exit(1)
-
-n = int(sys.argv[1])
-
-
-def queens(n, i=0, a=[], b=[], c=[]):
-    """ find possible positions """
-    if i < n:
-        for j in range(n):
-            if j not in a and i + j not in b and i - j not in c:
-                yield from queens(n, i + 1, a + [j], b + [i + j], c + [i - j])
-    else:
-        yield a
-
-
-def solve(n):
-    """ solve """
-    k = []
-    i = 0
-    for solution in queens(n, 0):
-        for s in solution:
-            k.append([i, s])
-            i += 1
-        print(k)
-        k = []
-        i = 0
+def backtrack_nqueen(r, n):
+    """
+    `backtrack_nqueen` is a recursive backtracking
+    algorithm to solve the N-Queens problem in Python.
+    """
+    # board = [0 for i in range(n) for j in range(n)]
+    for c in range(n):
+        if r + c in right_diag or r - c in left_diag or c in column:
+            continue
+        result.append([])
+        left_diag.add(r - c)
+        right_diag.add(r + c)
+        column.add(c)
+        result[-1].append(r)
+        result[-1].append(c)
+        if len(result) == n:
+            print(result)
+            # yield result
+        backtrack_nqueen(r + 1, n)
+        left_diag.remove(r - c)
+        right_diag.remove(r + c)
+        column.remove(c)
+        result.pop(-1)
+    # return solution
 
 
-solve(n)
+if __name__ == '__main__':
+    from sys import argv
+    if not isinstance(int(argv[1]), int):
+        print('N must be a number')
+        exit(1)
+    if int(argv[1]) < 4:
+        print('N must be at least 4')
+        exit(1)
+    backtrack_nqueen(0, int(argv[1]))
