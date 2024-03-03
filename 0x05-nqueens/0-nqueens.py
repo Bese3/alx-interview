@@ -36,6 +36,11 @@ def backtrack_nqueen(r, n):
 
 if __name__ == '__main__':
     from sys import argv
+    try:
+        int(argv[1])
+    except IndexError:
+        print('Usage: nqueens N')
+        exit(1)
     if not isinstance(int(argv[1]), int):
         print('N must be a number')
         exit(1)
